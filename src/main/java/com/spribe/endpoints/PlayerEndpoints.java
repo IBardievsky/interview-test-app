@@ -12,4 +12,6 @@ public interface PlayerEndpoints {
 
     String GET_ALL_PLAYERS_URL = GET_PLAYER_URL + "/all";
 
+    String UPDATE_PLAYER_URL = BASE_PATH + "/update/%s/%s";
+
 }

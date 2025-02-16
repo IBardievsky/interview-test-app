@@ -4,6 +4,7 @@ package com.spribe.generators;
 import com.spribe.enums.Gender;
 import com.spribe.enums.Role;
 import com.spribe.models.request.PlayerCreateDto;
+import io.qameta.allure.Step;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -11,6 +12,7 @@ import java.util.Random;
 
 @UtilityClass
 public class PlayerGenerator {
+
     public static PlayerCreateDto createRandomPlayer() {
         return createRandomPlayer(getRandomEnumValue(Gender.class), getRandomEnumValue(Role.class));
     }

@@ -1,6 +1,5 @@
 package com.spribe.models.request;
 
-import com.spribe.models.RequestModel;
 import lombok.*;
 
 @Data

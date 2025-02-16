@@ -1,12 +1,12 @@
 package com.spribe.models.request;
 
-import com.spribe.models.RequestModel;
 import lombok.*;
 
-@Value
+@Data
 @Builder
 @With
+@NoArgsConstructor
 @AllArgsConstructor
-public class PlayerGetByPlayerIdRequestDto implements RequestModel {
-     Long playerId;
+public class PlayerGetByPlayerIdRequestDto {
+     private Long playerId;
 }

@@ -1,12 +1,12 @@
+package player;
+
 import com.spribe.enums.Role;
 import com.spribe.generators.PlayerGenerator;
 import com.spribe.models.request.PlayerCreateDto;
 import com.spribe.models.response.ErrorResponseDto;
-import com.spribe.models.response.PlayerGetAllResponseDto;
 import com.spribe.models.response.PlayerItemResponseDto;
 import io.qameta.allure.Description;
 import io.qameta.allure.Issue;
-import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -15,9 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.spribe.endpoints.PlayerEndpoints.*;
-import static org.testng.Assert.assertEquals;
 
-public class GetAllPlayersTest extends BaseTest {
+public class GetAllPlayersTest extends BasePlayerTest {
 
     @Issue("2")
     @Test
@@ -26,18 +25,11 @@ public class GetAllPlayersTest extends BaseTest {
         List<PlayerCreateDto> createdPlayers = new ArrayList<>();
         while (createdPlayers.size() < 2) {
             PlayerCreateDto newPlayerData = PlayerGenerator.createRandomPlayer();
-            Response response = playerClient.createPlayer(Role.SUPERVISOR, newPlayerData);
-            assertEquals(response.getStatusCode(), 200,
-                    "Status code is %s during creating the player".formatted(response.getStatusCode()));
-            PlayerCreateDto createdPlayer = response.as(PlayerCreateDto.class);
+            PlayerCreateDto createdPlayer = playerClient.createPlayer(Role.SUPERVISOR, newPlayerData, 200);
             createdPlayers.add(createdPlayer);
         }
 
-        Response playersResponse = playerClient.getAllPlayers();
-        assertEquals(playersResponse.getStatusCode(), 200,
-                "Status code is %s while receiving all players info".formatted(playersResponse.getStatusCode()));
-        List<PlayerItemResponseDto> playersList = playersResponse.as(PlayerGetAllResponseDto.class).getPlayers();
-
+        List<PlayerItemResponseDto> playersList = playerClient.getAllPlayers(200).getPlayers();
         boolean allFieldsNotNull = playersList.stream().allMatch(player ->
                 player.getId() != null &&
                         player.getScreenName() != null &&
@@ -59,10 +51,7 @@ public class GetAllPlayersTest extends BaseTest {
     @Test
     @Description("Get all players with invalid request method")
     public void testGetAllPlayersWithInvalidRequestMethod() {
-        Response responseResponse = playerClient.getAllPlayersWithPostMethod();
-        assertEquals(responseResponse.getStatusCode(), 405,
-                "Status code is %s while receiving all players info".formatted(responseResponse.getStatusCode()));
-        ErrorResponseDto errorResponse = responseResponse.as(ErrorResponseDto.class);
+        ErrorResponseDto errorResponse = playerClient.getAllPlayersWithPostMethod(405);
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(errorResponse.getTimestamp(), "Timestamp should not be null");

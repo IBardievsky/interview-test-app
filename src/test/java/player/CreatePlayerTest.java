@@ -6,7 +6,6 @@ import com.spribe.enums.Role;
 import com.spribe.generators.PlayerGenerator;
 import com.spribe.models.request.PlayerItemDto;
 import io.qameta.allure.Description;
-import io.qameta.allure.Issue;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 

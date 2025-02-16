@@ -14,6 +14,7 @@ import org.testng.asserts.SoftAssert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.spribe.endpoints.PlayerEndpoints.*;
 
@@ -38,7 +39,9 @@ public class GetAllPlayersTest extends BasePlayerTest {
                         player.getAge() != null &&
                         player.getRole() == null
         );
-        List<Long> createdPlayerIds = createdPlayers.stream().map(PlayerItemDto::getId).toList();
+        List<Long> createdPlayerIds = createdPlayers.stream()
+                .map(PlayerItemDto::getId)
+                .collect(Collectors.toList());
         boolean createdPlayersInTheList = playersList.stream()
                 .map(PlayerItemResponseDto::getId)
                 .anyMatch(createdPlayerIds::contains);

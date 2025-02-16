@@ -7,7 +7,7 @@ import lombok.*;
 @With
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlayerCreateDto implements RequestModel {
+public class PlayerItemDto {
     private Long id;
     private String gender;
     private Integer age;

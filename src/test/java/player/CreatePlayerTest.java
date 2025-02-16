@@ -1,9 +1,10 @@
 package player;
 
+import com.spribe.clients.PlayerClient;
 import com.spribe.enums.Gender;
 import com.spribe.enums.Role;
 import com.spribe.generators.PlayerGenerator;
-import com.spribe.models.request.PlayerCreateDto;
+import com.spribe.models.request.PlayerItemDto;
 import io.qameta.allure.Description;
 import io.qameta.allure.Issue;
 import org.testng.annotations.DataProvider;
@@ -18,15 +19,14 @@ public class CreatePlayerTest extends BasePlayerTest {
         return new Object[][]
                 {
                         {Role.SUPERVISOR, PlayerGenerator.createRandomPlayer(Gender.FEMALE, Role.ADMIN)},
-                        {Role.SUPERVISOR, PlayerGenerator.createRandomPlayer(Gender.MALE, Role.USER)}
+                        {Role.ADMIN, PlayerGenerator.createRandomPlayer(Gender.MALE, Role.USER)}
                 };
     }
 
-    @Issue("1")
     @Test(dataProvider = "validData")
     @Description("Create player with valid data")
-    public void testCreatePlayerWithValidData(Role editor, PlayerCreateDto playerDto) {
-        PlayerCreateDto actualResponse = playerClient.createPlayer(editor, playerDto, 200);
+    public void testCreatePlayerWithValidData(Role editor, PlayerItemDto playerDto) {
+        PlayerItemDto actualResponse = new PlayerClient().createPlayer(editor, playerDto);
 
         assertNotNull(actualResponse.getId(), "Player ID is null");
         assertEquals(actualResponse, playerDto.withId(actualResponse.getId()));
@@ -44,7 +44,7 @@ public class CreatePlayerTest extends BasePlayerTest {
 
     @Test(dataProvider = "inValidData")
     @Description("Create player with invalid data")
-    public void testCreatePlayerWithInvalidData(Role editor, PlayerCreateDto playerDto, int statusCode) {
-        playerClient.createPlayer(editor, playerDto, statusCode);
+    public void testCreatePlayerWithInvalidData(Role editor, PlayerItemDto playerDto, int statusCode) {
+        new PlayerClient().createPlayer(editor, playerDto, statusCode);
     }
 }

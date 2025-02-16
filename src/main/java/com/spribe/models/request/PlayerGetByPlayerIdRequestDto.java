@@ -4,7 +4,6 @@ import lombok.*;
 
 @Data
 @Builder
-@With
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlayerGetByPlayerIdRequestDto {

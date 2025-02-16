@@ -1,9 +1,10 @@
 package player;
 
+import com.spribe.clients.PlayerClient;
 import com.spribe.enums.Role;
 import com.spribe.generators.PlayerGenerator;
 import com.spribe.models.request.PlayerDeleteRequestDto;
-import com.spribe.models.request.PlayerCreateDto;
+import com.spribe.models.request.PlayerItemDto;
 import com.spribe.models.response.PlayerItemResponseDto;
 import io.qameta.allure.Description;
 import org.hamcrest.Matchers;
@@ -18,8 +19,9 @@ public class DeletePlayerTest extends BasePlayerTest {
     @Test
     @Description("Verify that the player is deleted successfully")
     public void testDeletePlayer() {
-        PlayerCreateDto newPlayerData = PlayerGenerator.createRandomPlayer();
-        PlayerCreateDto createdPlayer = playerClient.createPlayer(Role.SUPERVISOR, newPlayerData, 200);
+        PlayerClient playerClient = new PlayerClient();
+        PlayerItemDto newPlayerData = PlayerGenerator.createRandomPlayer();
+        PlayerItemDto createdPlayer = playerClient.createPlayer(Role.SUPERVISOR, newPlayerData);
 
         PlayerDeleteRequestDto deleteRequestDto = new PlayerDeleteRequestDto(createdPlayer.getId());
         playerClient.deletePlayerById(Role.SUPERVISOR, deleteRequestDto, 204)
@@ -37,7 +39,7 @@ public class DeletePlayerTest extends BasePlayerTest {
     @Description("Verify that error 403 is displayed when trying to delete a player with the non existing id")
     public void testDeleteNonExistentPlayer() {
         PlayerDeleteRequestDto deleteRequestDto = new PlayerDeleteRequestDto(999999L);
-        playerClient.deletePlayerById(Role.SUPERVISOR, deleteRequestDto, 403)
+        new PlayerClient().deletePlayerById(Role.SUPERVISOR, deleteRequestDto, 403)
                 .asResponse().assertThat().body(Matchers.emptyOrNullString());
     }
 }

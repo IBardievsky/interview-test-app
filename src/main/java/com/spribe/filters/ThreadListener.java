@@ -11,6 +11,8 @@ public class ThreadListener implements IAlterSuiteListener {
     @Override
     public void alter(List<XmlSuite> suites) {
         String threadCount = ConfigManager.getThreadCount();
+        System.out.println("Thread count set to: " + threadCount);
+
         for (XmlSuite suite : suites) {
             suite.setThreadCount(Integer.parseInt(threadCount));
         }

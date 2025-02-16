@@ -1,0 +1,19 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="API Controller" parallel="classes">
+
+    <listeners>
+        <listener class-name="com.spribe.filters.ThreadListener"/>
+        <listener class-name="io.qameta.allure.testng.AllureTestNgTestFilter"/>
+    </listeners>
+
+    <test name="Player API Tests">
+        <classes>
+            <class name="player.CreatePlayerTest"/>
+            <class name="player.DeletePlayerTest"/>
+            <class name="player.GetAllPlayersTest"/>
+            <class name="player.GetPlayerByIdTest"/>
+            <class name="player.UpdatePlayerTest"/>
+        </classes>
+    </test>
+
+</suite>

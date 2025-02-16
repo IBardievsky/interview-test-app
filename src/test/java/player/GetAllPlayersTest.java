@@ -1,8 +1,9 @@
 package player;
 
+import com.spribe.clients.PlayerClient;
 import com.spribe.enums.Role;
 import com.spribe.generators.PlayerGenerator;
-import com.spribe.models.request.PlayerCreateDto;
+import com.spribe.models.request.PlayerItemDto;
 import com.spribe.models.response.ErrorResponseDto;
 import com.spribe.models.response.PlayerItemResponseDto;
 import io.qameta.allure.Description;
@@ -18,14 +19,14 @@ import static com.spribe.endpoints.PlayerEndpoints.*;
 
 public class GetAllPlayersTest extends BasePlayerTest {
 
-    @Issue("2")
     @Test
     @Description("Verify that all players are received successfully")
     public void testGetAllPlayers() {
-        List<PlayerCreateDto> createdPlayers = new ArrayList<>();
+        PlayerClient playerClient = new PlayerClient();
+        List<PlayerItemDto> createdPlayers = new ArrayList<>();
         while (createdPlayers.size() < 2) {
-            PlayerCreateDto newPlayerData = PlayerGenerator.createRandomPlayer();
-            PlayerCreateDto createdPlayer = playerClient.createPlayer(Role.SUPERVISOR, newPlayerData, 200);
+            PlayerItemDto newPlayerData = PlayerGenerator.createRandomPlayer();
+            PlayerItemDto createdPlayer = playerClient.createPlayer(Role.SUPERVISOR, newPlayerData);
             createdPlayers.add(createdPlayer);
         }
 
@@ -37,7 +38,7 @@ public class GetAllPlayersTest extends BasePlayerTest {
                         player.getAge() != null &&
                         player.getRole() == null
         );
-        List<Long> createdPlayerIds = createdPlayers.stream().map(PlayerCreateDto::getId).toList();
+        List<Long> createdPlayerIds = createdPlayers.stream().map(PlayerItemDto::getId).toList();
         boolean createdPlayersInTheList = playersList.stream()
                 .map(PlayerItemResponseDto::getId)
                 .anyMatch(createdPlayerIds::contains);
@@ -51,7 +52,7 @@ public class GetAllPlayersTest extends BasePlayerTest {
     @Test
     @Description("Get all players with invalid request method")
     public void testGetAllPlayersWithInvalidRequestMethod() {
-        ErrorResponseDto errorResponse = playerClient.getAllPlayersWithPostMethod(405);
+        ErrorResponseDto errorResponse = new PlayerClient().getAllPlayersWithPostMethod(405);
 
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertNotNull(errorResponse.getTimestamp(), "Timestamp should not be null");

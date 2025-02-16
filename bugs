@@ -1,0 +1,120 @@
+Problems Found During Testing
+
+Description
+This document contains a list of founded issues during testing.
+The final decision on whether it is a bug or a feature should be made after reviewing the technical requirements.
+
+ --- Create Player ---
+
+ Issue 1:
+    name:           Player is created with GET request instead of POST.
+    Steps:          1. Send a GET request to create a player.
+                    2. Check the response.
+                    Actual: The system creates a player with a GET request.
+                    Expected: The system should return an error message that the method is not allowed.
+
+ Issue 2:
+    name:           After creating a player, the system returns only "id" and "login" fields instead of full player information.
+    Steps:          Make any request which creates a new Player e.g.
+                    GET http://3.68.165.45/player/create/supervisor?password=34k3XehL0iiF&role=admin&gender=female&screenName=S5sLye72UT&login=UiBV7RRn&age=44
+
+                    Actual: The system return response with code 200 and the following fields:
+                    {
+                        "id":166644577,
+                        "login":"UiBV7RRn",
+                        "password":null,
+                        "screenName":null,
+                        "gender":null,
+                        "age":null,
+                        "role":null
+                    }
+                    Expected: all fields are filled out with sent parameters
+
+ Issue 3:
+     name:          The system updates the player's information through the create player request.
+     Steps:
+                    1. Create a player with login "test".
+                    2. Update the player model except the login field.
+                    3. Send a request to create a player with the same login.
+                    Actual: The system updated already created player with the same login.
+                    Expected: The system should return an error message that login is already taken.
+
+Issue 4:
+     name:          Password field is not mandatory during player creation via GET request.
+     Steps:
+                    1. Send a request to create a player without password parameter.
+                    2. Check the response.
+                    Actual: The system creates a player without password.
+                    Expected: The system should return an error message that password is required.
+
+--- Delete Player ---
+
+Issue 5:
+    name:           The system allows to delete a player with admin editor role.
+    Precondition:   The player is available for deleting present in the system.
+    Steps:          1. Send a request to delete a player as admin editor.
+                    2. Check the response.
+                    Actual: The system deletes a player without checking the role of the editor.
+                    Expected: The system should return an error message that the editor does not have permission to delete a player.
+
+Issue 6:
+    name:          The system returns 403 status code instead of 404 after sending a request to delete a non-existent player.
+    Steps:         1. Send a request to delete a player with a non-existent id.
+                   2. Check the response.
+                   Actual: The system returns 403 status code.
+                   Expected: The system should return 404 status code.
+
+--- Get Player ---
+
+Issue 7:
+    name:           The POST request is used to get player information.
+    Steps:          1. Send a POST request to get player information.
+                    2. Check the response.
+                    Actual: The system returns player information with a POST request.
+                    Expected: The system should return an error message that the method is not allowed.
+
+Issue 8:
+    name:           The system returns 200 status code instead of 404 after sending a request to get information about a non-existent player.
+    Steps:          1. Send a request to get information about a player with a non-existent id.
+                    2. Check the response.
+                    Actual: The system returns 200 status code.
+                    Expected: The system should return 404 status code.
+
+Issue 9:
+    name:           200 status code returns after a request with wrong schema validation for the get player request
+    Steps:          1. Send a request to get player information with body e.g.
+                    {
+                     "test": "test"
+                    }
+                    2. Check the response.
+                    Actual: The system returns status code 200.
+                    Expected: The system should return an error message that the schema is not valid.
+
+Issue 10:
+    name:           Periodically the system returns the response with the delay of 10 seconds.
+    Steps:          1. Send a request to get player information.
+                    2. Check the response time.
+                    Actual: The system returns the response with a delay of 10 seconds.
+                    Expected: The system should return the response without a delay.
+                    Note: The issue is not stable and appears periodically.
+
+--- Get all Players ---
+
+Issue 11:
+    name:           Role field of the player is not present in the response after sending a request to get all players.
+    Steps:          1. Send a request to get all players.
+                    2. Check the response.
+                    Actual: The system returns a response without the role field.
+                    Expected: According to swagger documentation the system should return a response with the role field.
+
+--- Update Player ---
+
+Issue 12:
+    name:           200 status code returns after a request with wrong schema validation for the get player request
+    Steps:          1. Send a request to get player information with body e.g.
+                    {
+                     "test": "test"
+                    }
+                    2. Check the response.
+                    Actual: The system returns status code 200.
+                    Expected: The system should return an error message that the schema is not valid.

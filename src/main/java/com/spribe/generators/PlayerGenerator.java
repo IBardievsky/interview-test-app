@@ -3,8 +3,7 @@ package com.spribe.generators;
 
 import com.spribe.enums.Gender;
 import com.spribe.enums.Role;
-import com.spribe.models.request.PlayerCreateDto;
-import io.qameta.allure.Step;
+import com.spribe.models.request.PlayerItemDto;
 import lombok.experimental.UtilityClass;
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -13,12 +12,12 @@ import java.util.Random;
 @UtilityClass
 public class PlayerGenerator {
 
-    public static PlayerCreateDto createRandomPlayer() {
+    public static PlayerItemDto createRandomPlayer() {
         return createRandomPlayer(getRandomEnumValue(Gender.class), getRandomEnumValue(Role.class));
     }
 
-    public static PlayerCreateDto createRandomPlayer(Gender gender, Role role) {
-        return PlayerCreateDto.builder()
+    public static PlayerItemDto createRandomPlayer(Gender gender, Role role) {
+        return PlayerItemDto.builder()
                 .screenName(generateRandomString(10))
                 .age(generateRandomIntInRange(17, 60))
                 .gender(gender.name().toLowerCase())

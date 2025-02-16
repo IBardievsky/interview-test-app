@@ -16,14 +16,15 @@ import static io.restassured.RestAssured.*;
 public abstract class BaseClient {
 
     private static final String BASE_URL = ConfigManager.getBaseUrl();
+    private static final int CONNECTION_TIMEOUT = ConfigManager.getConnectionTimeout();
+    private static final int SOCKET_TIMEOUT = ConfigManager.getSocketTimeout();
 
     static {
         RestAssured.config = RestAssured.config()
                 .httpClient(HttpClientConfig.httpClientConfig()
-                        .setParam("http.connection.timeout", 12000)
-                        .setParam("http.socket.timeout", 12000));
+                        .setParam("http.connection.timeout", CONNECTION_TIMEOUT)
+                        .setParam("http.socket.timeout", SOCKET_TIMEOUT));
         RestAssured.filters(new LoggingFilter());
-        RestAssured.defaultParser = Parser.JSON;
     }
 
     private RequestSpecification request() {

@@ -4,7 +4,7 @@ import com.spribe.enums.Role;
 import com.spribe.models.ResponseData;
 import com.spribe.models.request.PlayerDeleteRequestDto;
 import com.spribe.models.request.PlayerGetByPlayerIdRequestDto;
-import com.spribe.models.request.PlayerCreateDto;
+import com.spribe.models.request.PlayerItemDto;
 import com.spribe.models.response.ErrorResponseDto;
 import com.spribe.models.response.PlayerGetAllResponseDto;
 
@@ -17,11 +17,11 @@ import static java.util.Objects.nonNull;
 
 public class PlayerClient extends BaseClient {
 
-    public PlayerCreateDto getPlayerById(PlayerGetByPlayerIdRequestDto dto, int expectedStatusCode) {
-        return post(GET_PLAYER_URL, dto, expectedStatusCode).as(PlayerCreateDto.class);
+    public PlayerItemDto getPlayerById(PlayerGetByPlayerIdRequestDto dto, int expectedStatusCode) {
+        return post(GET_PLAYER_URL, dto, expectedStatusCode).as(PlayerItemDto.class);
     }
 
-    public PlayerCreateDto createPlayer(Role editor, PlayerCreateDto dto, int expectedStatusCode) {
+    public ResponseData createPlayer(Role editor, PlayerItemDto dto, int expectedStatusCode) {
         HashMap<String, String> queryParams = new HashMap<>();
         addToMapIfNotNull(queryParams, "age", dto.getAge().toString());
         addToMapIfNotNull(queryParams, "gender", dto.getGender());
@@ -31,13 +31,11 @@ public class PlayerClient extends BaseClient {
         addToMapIfNotNull(queryParams, "screenName", dto.getScreenName());
 
         String createPathUrl = format(CREATE_PLAYER_URL, editor.name().toLowerCase());
-        ResponseData response = get(createPathUrl, queryParams, expectedStatusCode);
+        return get(createPathUrl, queryParams, expectedStatusCode);
+    }
 
-        if (response.asResponse().extract().statusCode() >= 400) {
-            return response.as(PlayerCreateDto.class);
-        } else {
-            throw new AssertionError("");
-        }
+    public PlayerItemDto createPlayer(Role editor, PlayerItemDto dto) {
+        return createPlayer(editor, dto, 200).as(PlayerItemDto.class);
     }
 
     private void addToMapIfNotNull(Map<String, String> map, String key, String value) {
@@ -51,7 +49,7 @@ public class PlayerClient extends BaseClient {
     }
 
     public ErrorResponseDto getAllPlayersWithPostMethod(int expectedStatusCode) {
-        return post(GET_ALL_PLAYERS_URL, PlayerCreateDto.builder().build(), expectedStatusCode).as(ErrorResponseDto.class);
+        return post(GET_ALL_PLAYERS_URL, PlayerItemDto.builder().build(), expectedStatusCode).as(ErrorResponseDto.class);
     }
 
     public ResponseData deletePlayerById(Role editor, PlayerDeleteRequestDto dto, int expectedStatusCode) {
@@ -59,8 +57,8 @@ public class PlayerClient extends BaseClient {
         return delete(deletePathUrl, dto, expectedStatusCode);
     }
 
-    public PlayerCreateDto updatePlayer(Role editor, long playerId, PlayerCreateDto dto, int expectedStatusCode) {
+    public PlayerItemDto updatePlayer(Role editor, long playerId, PlayerItemDto dto, int expectedStatusCode) {
         String updatePathUrl = format(UPDATE_PLAYER_URL, editor.name().toLowerCase(), playerId);
-        return patch(updatePathUrl, dto, expectedStatusCode).as(PlayerCreateDto.class);
+        return patch(updatePathUrl, dto, expectedStatusCode).as(PlayerItemDto.class);
     }
 }

@@ -11,8 +11,8 @@ public class ConfigManager {
     static {
         try (FileInputStream fileInputStream = new FileInputStream("src/test/resources/config.properties")) {
             properties.load(fileInputStream);
-        } catch (IOException e) {
-            throw new RuntimeException("config.properties is not loaded", e);
+        } catch (IOException exception) {
+            throw new RuntimeException("config.properties is not loaded", exception);
         }
     }
 
@@ -29,6 +29,18 @@ public class ConfigManager {
     }
 
     public static String getThreadCount() {
+        String threadCount = System.getProperty("thread.count");
+        if (threadCount != null && !threadCount.isEmpty()) {
+            return threadCount;
+        }
         return getProperty("thread.count");
+    }
+
+    public static int getConnectionTimeout() {
+        return Integer.parseInt(getProperty("http.connection.timeout"));
+    }
+
+    public static int getSocketTimeout() {
+        return Integer.parseInt(getProperty("http.socket.timeout"));
     }
 }

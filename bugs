@@ -118,3 +118,31 @@ Issue 12:
                     2. Check the response.
                     Actual: The system returns status code 200.
                     Expected: The system should return an error message that the schema is not valid.
+
+Issue 13:
+    name:           The role of the player is not updated after sending a request to update the player.
+    Steps:          1. Send a request to update the player role.
+                    PATCH http://3.68.165.45/player/update/supervisor/19345674
+                    {
+                          "role": "admin"
+                    }
+                    2. Check the response.
+                    {
+                          "id": 19345674,
+                          "login": "OUyo445ssl",
+                          "screenName": "yKmFFola466",
+                          "gender": "male",
+                          "age": 60,
+                          "role": "user"
+                    }
+                    Actual: The system returns a response with the updated role.
+                    Expected: The system should return a response with the updated role.
+
+--- General ---
+
+Issue 13:
+    name:           Periodically the backend returns 403 error status code on any request.
+    Steps:          1. Send a valid request to the backend.
+                    2. Check the response.
+                    Actual: The system returns 403 status code.
+                    Expected: The system should return a valid response.

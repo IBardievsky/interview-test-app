@@ -7,6 +7,7 @@ import com.spribe.models.request.PlayerGetByPlayerIdRequestDto;
 import com.spribe.models.request.PlayerItemDto;
 import com.spribe.models.response.ErrorResponseDto;
 import com.spribe.models.response.PlayerGetAllResponseDto;
+import io.qameta.allure.Step;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class PlayerClient extends BaseClient {
         return post(GET_PLAYER_URL, dto, expectedStatusCode).as(PlayerItemDto.class);
     }
 
+    @Step("Create player with {editor} role")
     public ResponseData createPlayer(Role editor, PlayerItemDto dto, int expectedStatusCode) {
         HashMap<String, String> queryParams = new HashMap<>();
         addToMapIfNotNull(queryParams, "age", dto.getAge().toString());
@@ -44,19 +46,23 @@ public class PlayerClient extends BaseClient {
         }
     }
 
+    @Step("Get all players")
     public PlayerGetAllResponseDto getAllPlayers(int expectedStatusCode) {
         return get(GET_ALL_PLAYERS_URL, new HashMap<>(), expectedStatusCode).as(PlayerGetAllResponseDto.class);
     }
 
+    @Step("Get all players with POST method")
     public ErrorResponseDto getAllPlayersWithPostMethod(int expectedStatusCode) {
         return post(GET_ALL_PLAYERS_URL, PlayerItemDto.builder().build(), expectedStatusCode).as(ErrorResponseDto.class);
     }
 
+    @Step("Delete player with {editor} role")
     public ResponseData deletePlayerById(Role editor, PlayerDeleteRequestDto dto, int expectedStatusCode) {
         String deletePathUrl = format(DELETE_PLAYER_URL, editor.name().toLowerCase());
         return delete(deletePathUrl, dto, expectedStatusCode);
     }
 
+    @Step("Update player with {editor} role")
     public PlayerItemDto updatePlayer(Role editor, long playerId, PlayerItemDto dto, int expectedStatusCode) {
         String updatePathUrl = format(UPDATE_PLAYER_URL, editor.name().toLowerCase(), playerId);
         return patch(updatePathUrl, dto, expectedStatusCode).as(PlayerItemDto.class);

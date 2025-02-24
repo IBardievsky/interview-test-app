@@ -23,16 +23,16 @@ public class LoggingFilter implements Filter {
     }
 
     private void logRequest(FilterableRequestSpecification requestSpec) {
-        logger.info("Request: {} {}", requestSpec.getMethod(), requestSpec.getURI());
-        logger.info("Headers: {}", requestSpec.getHeaders());
+        logger.info("Request: {} {} \n Headers: {} \n Cookies: {}",
+                requestSpec.getMethod(), requestSpec.getURI(), requestSpec.getHeaders(), requestSpec.getCookies());
         if (requestSpec.getBody() != null) {
             logger.info("Request Body: {}", requestSpec.getBody().toString());
         }
     }
 
     private void logResponse(Response response) {
-        logger.info("Response Status: {}", response.getStatusCode());
-        logger.info("Response Body: {}", response.getBody().asString());
+        logger.info("Response Status: {} \n Response Body: {}",
+                response.getStatusCode(), response.getBody().asString());
     }
 }
 

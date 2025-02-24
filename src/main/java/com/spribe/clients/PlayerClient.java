@@ -12,14 +12,14 @@ import io.qameta.allure.Step;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.spribe.endpoints.PlayerEndpoints.*;
+import static com.spribe.enums.PlayerEndpoints.*;
 import static java.lang.String.*;
 import static java.util.Objects.nonNull;
 
 public class PlayerClient extends BaseClient {
 
     public PlayerItemDto getPlayerById(PlayerGetByPlayerIdRequestDto dto, int expectedStatusCode) {
-        return post(GET_PLAYER_URL, dto, expectedStatusCode).as(PlayerItemDto.class);
+        return post(GET_PLAYER_URL.getUrl(), dto, expectedStatusCode).as(PlayerItemDto.class);
     }
 
     @Step("Create player with {editor} role")
@@ -32,7 +32,7 @@ public class PlayerClient extends BaseClient {
         addToMapIfNotNull(queryParams, "role", dto.getRole());
         addToMapIfNotNull(queryParams, "screenName", dto.getScreenName());
 
-        String createPathUrl = format(CREATE_PLAYER_URL, editor.name().toLowerCase());
+        String createPathUrl = format(CREATE_PLAYER_URL.getUrl(), editor.name().toLowerCase());
         return get(createPathUrl, queryParams, expectedStatusCode);
     }
 
@@ -48,23 +48,23 @@ public class PlayerClient extends BaseClient {
 
     @Step("Get all players")
     public PlayerGetAllResponseDto getAllPlayers(int expectedStatusCode) {
-        return get(GET_ALL_PLAYERS_URL, new HashMap<>(), expectedStatusCode).as(PlayerGetAllResponseDto.class);
+        return get(GET_ALL_PLAYERS_URL.getUrl(), new HashMap<>(), expectedStatusCode).as(PlayerGetAllResponseDto.class);
     }
 
     @Step("Get all players with POST method")
     public ErrorResponseDto getAllPlayersWithPostMethod(int expectedStatusCode) {
-        return post(GET_ALL_PLAYERS_URL, PlayerItemDto.builder().build(), expectedStatusCode).as(ErrorResponseDto.class);
+        return post(GET_ALL_PLAYERS_URL.getUrl(), PlayerItemDto.builder().build(), expectedStatusCode).as(ErrorResponseDto.class);
     }
 
     @Step("Delete player with {editor} role")
     public ResponseData deletePlayerById(Role editor, PlayerDeleteRequestDto dto, int expectedStatusCode) {
-        String deletePathUrl = format(DELETE_PLAYER_URL, editor.name().toLowerCase());
+        String deletePathUrl = format(DELETE_PLAYER_URL.getUrl(), editor.name().toLowerCase());
         return delete(deletePathUrl, dto, expectedStatusCode);
     }
 
     @Step("Update player with {editor} role")
     public PlayerItemDto updatePlayer(Role editor, long playerId, PlayerItemDto dto, int expectedStatusCode) {
-        String updatePathUrl = format(UPDATE_PLAYER_URL, editor.name().toLowerCase(), playerId);
+        String updatePathUrl = format(UPDATE_PLAYER_URL.getUrl(), editor.name().toLowerCase(), playerId);
         return patch(updatePathUrl, dto, expectedStatusCode).as(PlayerItemDto.class);
     }
 }

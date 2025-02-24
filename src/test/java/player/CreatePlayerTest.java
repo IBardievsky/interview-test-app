@@ -1,6 +1,5 @@
 package player;
 
-import com.spribe.clients.PlayerClient;
 import com.spribe.enums.Gender;
 import com.spribe.enums.Role;
 import com.spribe.generators.PlayerGenerator;
@@ -25,7 +24,7 @@ public class CreatePlayerTest extends BasePlayerTest {
     @Test(dataProvider = "validData")
     @Description("Create player with valid data")
     public void testCreatePlayerWithValidData(Role editor, PlayerItemDto playerDto) {
-        PlayerItemDto actualResponse = new PlayerClient().createPlayer(editor, playerDto);
+        PlayerItemDto actualResponse = playerClient.createPlayer(editor, playerDto);
 
         assertNotNull(actualResponse.getId(), "Player ID is null");
         assertEquals(actualResponse, playerDto.withId(actualResponse.getId()));
@@ -44,6 +43,6 @@ public class CreatePlayerTest extends BasePlayerTest {
     @Test(dataProvider = "inValidData")
     @Description("Create player with invalid data")
     public void testCreatePlayerWithInvalidData(Role editor, PlayerItemDto playerDto, int statusCode) {
-        new PlayerClient().createPlayer(editor, playerDto, statusCode);
+        playerClient.createPlayer(editor, playerDto, statusCode);
     }
 }

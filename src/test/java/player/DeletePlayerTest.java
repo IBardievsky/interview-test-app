@@ -19,7 +19,6 @@ public class DeletePlayerTest extends BasePlayerTest {
     @Test
     @Description("Verify that the player is deleted successfully")
     public void testDeletePlayer() {
-        PlayerClient playerClient = new PlayerClient();
         PlayerItemDto newPlayerData = PlayerGenerator.createRandomPlayer();
         PlayerItemDto createdPlayer = playerClient.createPlayer(Role.SUPERVISOR, newPlayerData);
 

@@ -1,6 +1,5 @@
 package player;
 
-import com.spribe.clients.PlayerClient;
 import com.spribe.enums.Role;
 import com.spribe.generators.PlayerGenerator;
 import com.spribe.models.request.PlayerItemDto;
@@ -14,7 +13,7 @@ public class UpdatePlayerTest extends BasePlayerTest {
 
     private PlayerItemDto prepareData() {
         PlayerItemDto newPlayerData = PlayerGenerator.createRandomPlayer();
-        return new PlayerClient().createPlayer(Role.SUPERVISOR, newPlayerData);
+        return playerClient.createPlayer(Role.SUPERVISOR, newPlayerData);
     }
 
     @Test
@@ -24,7 +23,7 @@ public class UpdatePlayerTest extends BasePlayerTest {
 
         // TODO: add dataProvider to update each field instead of updating all fields
         PlayerItemDto updatedPlayerData = PlayerGenerator.createRandomPlayer();
-        PlayerItemDto actual = new PlayerClient()
+        PlayerItemDto actual = playerClient
                 .updatePlayer(Role.SUPERVISOR, createdPlayer.getId(), updatedPlayerData, 200);
         assertEquals(actual, updatedPlayerData.withId(createdPlayer.getId()));
     }
@@ -32,7 +31,7 @@ public class UpdatePlayerTest extends BasePlayerTest {
     @Test(dataProvider = "data")
     public void testUpdatePlayerProfileWithInvalidData(Role role, PlayerItemDto playerDto, int statusCode) {
         PlayerItemDto createdPlayer = prepareData();
-        new PlayerClient().updatePlayer(role, createdPlayer.getId(), playerDto, statusCode);
+        playerClient.updatePlayer(role, createdPlayer.getId(), playerDto, statusCode);
     }
 
     @DataProvider

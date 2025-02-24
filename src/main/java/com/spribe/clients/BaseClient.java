@@ -6,10 +6,14 @@ import com.spribe.models.ResponseData;
 import io.restassured.RestAssured;
 import io.restassured.config.HttpClientConfig;
 import io.restassured.http.ContentType;
+import io.restassured.http.Method;
 import io.restassured.parsing.Parser;
+import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import static io.restassured.RestAssured.*;
 
@@ -27,55 +31,44 @@ public abstract class BaseClient {
         RestAssured.filters(new LoggingFilter());
     }
 
-    private RequestSpecification request() {
-        return given().baseUri(BASE_URL)
+    private ValidatableResponse sendRequest(
+            Method method, String endpoint, Object requestBody,
+            Map<String, String> queryParams, int expectedStatusCode
+    ) {
+        RequestSpecification requestSpecification = given().baseUri(BASE_URL)
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON);
+        if (method == Method.GET) {
+            return requestSpecification
+                    .queryParams(queryParams)
+                    .when()
+                    .get(endpoint)
+                    .then()
+                    .statusCode(expectedStatusCode);
+        } else {
+            return requestSpecification
+                    .body(requestBody)
+                    .when()
+                    .request(method, endpoint)
+                    .then()
+                    .statusCode(expectedStatusCode);
+        }
     }
 
     protected ResponseData get(String endpoint, HashMap<String, String> queryParams, int statusCode) {
-        return new ResponseData(
-                request()
-                        .queryParams(queryParams)
-                        .when()
-                        .get(endpoint)
-                        .then()
-                        .statusCode(statusCode)
-        );
+        return new ResponseData(sendRequest(Method.GET, endpoint, null, queryParams, statusCode));
     }
 
     protected <T> ResponseData post(String endpoint, T requestBody, int expectedStatusCode) {
-        return new ResponseData(
-                request()
-                        .body(requestBody)
-                        .when()
-                        .post(endpoint)
-                        .then()
-                        .statusCode(expectedStatusCode)
-        );
+        return new ResponseData(sendRequest(Method.POST, endpoint, requestBody, null, expectedStatusCode));
     }
 
     protected <T> ResponseData patch(String endpoint, T requestBody, int expectedStatusCode) {
-        return new ResponseData(
-                request()
-                        .body(requestBody)
-                        .when()
-                        .patch(endpoint)
-                        .then()
-                        .statusCode(expectedStatusCode)
-        );
+        return new ResponseData(sendRequest(Method.PATCH, endpoint, requestBody, null, expectedStatusCode));
     }
 
     protected <T> ResponseData delete(String endpoint, T requestBody, int statusCode) {
-        return new ResponseData(
-                request()
-                        .body(requestBody)
-                        .when()
-                        .delete(endpoint)
-                        .then()
-                        .statusCode(statusCode)
-        );
+        return new ResponseData(sendRequest(Method.DELETE, endpoint, requestBody, null, statusCode));
     }
-
 
 }
